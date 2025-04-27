@@ -1,0 +1,63 @@
+from __future__ import annotations
+
+from typing import Any, Dict, List
+import logging
+
+from .model import get_openai_model
+from .model import get_openai_model_settings
+
+from agents import Agent
+from agents import Runner
+from agents.mcp import MCPServerStdio
+
+
+class OpenAIAgent:
+    """A wrapper for OpenAI Agent"""
+
+    def __init__(self, name: str, agent: Agent) -> None:
+        self.current_agent = agent
+        self.name = name
+
+    @classmethod
+    def from_json(cls, name: str, config: Dict[str, Any]) -> OpenAIAgent:
+        agent = Agent(
+            name=name,
+            instructions="You are a helpful Slack bot assistant. When responding, you must strictly use Slack’s mrkdwn formatting syntax only. Do not generate headings (#), tables, or any other Markdown features not supported by Slack. Ensure that all output strictly complies with Slack’s mrkdwn specifications.",
+            model=get_openai_model(),
+            model_settings=get_openai_model_settings(),
+            mcp_servers=[
+                MCPServerStdio(
+                    params={
+                        "command": srv_config["command"],
+                        "args": srv_config["args"],
+                    }
+                )
+                for _, srv_config in config
+            ],
+        )
+        return cls(name, agent)
+
+    async def connect(self) -> None:
+        for mcp_server in self.current_agent.mcp_servers:
+            try:
+                await mcp_server.connect()
+                logging.info(f"Server {mcp_server.name} connecting")
+            except Exception as e:
+                logging.error(
+                    f"Error during connecting of server {mcp_server.name}: {e}"
+                )
+
+    async def run(self, messages: List) -> str:
+        """Run a workflow starting at the given agent."""
+        result = await Runner.run(self.current_agent, input=messages)
+        return result.final_output
+
+    async def cleanup(self) -> None:
+        """Clean up resources."""
+        # Clean up servers
+        for mcp_server in self.current_agent.mcp_servers:
+            try:
+                await mcp_server.cleanup()
+                logging.info(f"Server {mcp_server.name} cleaned up")
+            except Exception as e:
+                logging.error(f"Error during cleanup of server {mcp_server.name}: {e}")
