@@ -10,3 +10,4 @@ wheels/
 .venv
 
 .envrc
+test_servers_config.json
