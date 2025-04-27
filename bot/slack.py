@@ -93,7 +93,7 @@ class SlackMCPBot:
             if "messages" in self.conversations[channel]:
                 messages.extend(self.conversations[channel]["messages"][-5:])
 
-            logger.info(messages)
+            logging.debug(messages)
             # Get LLM response
             agent_resp = await self.agent.run(messages)
 

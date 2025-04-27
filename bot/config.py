@@ -14,7 +14,6 @@ class Configuration:
         self.slack_bot_token = os.getenv("SLACK_BOT_TOKEN")
         self.slack_app_token = os.getenv("SLACK_APP_TOKEN")
         self.openai_api_key = os.getenv("OPENAI_API_KEY")
-        self.llm_model = os.getenv("LLM_MODEL", "gpt-4o-mini")
         self.http_proxy = os.getenv("HTTP_PROXY")
 
     @staticmethod
