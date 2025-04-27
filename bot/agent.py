@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import Any, Dict, List
+from typing import Any, Dict, List, Optional
 import logging
 
 from .model import get_openai_model
@@ -14,28 +14,28 @@ from agents.mcp import MCPServerStdio
 class OpenAIAgent:
     """A wrapper for OpenAI Agent"""
 
-    def __init__(self, name: str, agent: Agent) -> None:
-        self.current_agent = agent
-        self.name = name
-
-    @classmethod
-    def from_json(cls, name: str, config: Dict[str, Any]) -> OpenAIAgent:
-        agent = Agent(
+    def __init__(self, name: str, mcp_servers: Optional[List] = None) -> None:
+        self.current_agent = Agent(
             name=name,
             instructions="You are a helpful Slack bot assistant. When responding, you must strictly use Slack’s mrkdwn formatting syntax only. Do not generate headings (#), tables, or any other Markdown features not supported by Slack. Ensure that all output strictly complies with Slack’s mrkdwn specifications.",
             model=get_openai_model(),
             model_settings=get_openai_model_settings(),
-            mcp_servers=[
-                MCPServerStdio(
-                    params={
-                        "command": srv_config["command"],
-                        "args": srv_config["args"],
-                    }
-                )
-                for _, srv_config in config
-            ],
+            mcp_servers=(mcp_servers if mcp_servers is not None else []),
         )
-        return cls(name, agent)
+        self.name = name
+
+    @classmethod
+    def from_dict(cls, name: str, config: Dict[str, Any]) -> OpenAIAgent:
+        mcp_servers = [
+            MCPServerStdio(
+                params={
+                    "command": mcp_srv["command"],
+                    "args": mcp_srv["args"],
+                }
+            )
+            for mcp_srv in config.values()
+        ]
+        return cls(name, mcp_servers)
 
     async def connect(self) -> None:
         for mcp_server in self.current_agent.mcp_servers:

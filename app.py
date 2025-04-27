@@ -15,12 +15,12 @@ async def main() -> None:
     config = Configuration()
 
     server_config = config.load_config("servers_config.json")
-    print(server_config["mcpServers"].items())
+
+    # Initialize the OpenAI agents with mcp servers
+    openai_agent = OpenAIAgent.from_dict("Slack Bot Agent", server_config["mcpServers"])
 
     # Initialize the OpenAI agents
-    openai_agent = OpenAIAgent.from_json(
-        "Slack Bot Agent", server_config["mcpServers"].items()
-    )
+    # openai_agent = OpenAIAgent("Slack Bot Agent")
 
     slack_bot = SlackMCPBot(
         config.slack_bot_token,
