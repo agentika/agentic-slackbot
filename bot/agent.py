@@ -28,10 +28,12 @@ class OpenAIAgent:
     def from_dict(cls, name: str, config: Dict[str, Any]) -> OpenAIAgent:
         mcp_servers = [
             MCPServerStdio(
+                client_session_timeout_seconds=30.0,
                 params={
                     "command": mcp_srv["command"],
                     "args": mcp_srv["args"],
-                }
+                    "env": mcp_srv["env"],
+                },
             )
             for mcp_srv in config.values()
         ]
