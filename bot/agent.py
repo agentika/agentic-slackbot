@@ -32,7 +32,7 @@ class OpenAIAgent:
                 params={
                     "command": mcp_srv["command"],
                     "args": mcp_srv["args"],
-                    "env": mcp_srv["env"],
+                    "env": mcp_srv.get("env", {}),
                 },
             )
             for mcp_srv in config.values()
