@@ -1,15 +1,13 @@
-import logging
 import asyncio
+import logging
 
-from bot.slack import SlackMCPBot
-from bot.agent import OpenAIAgent
-from bot.config import Configuration
+from .agent import OpenAIAgent
+from .config import Configuration
+from .slack import SlackMCPBot
 
 
 async def main() -> None:
-    logging.basicConfig(
-        level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s"
-    )
+    logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s")
 
     """Initialize and run the Slack bot."""
     config = Configuration()
@@ -43,5 +41,5 @@ async def main() -> None:
         await openai_agent.cleanup()
 
 
-if __name__ == "__main__":
+def run():
     asyncio.run(main())

@@ -9,5 +9,8 @@ wheels/
 # Virtual environments
 .venv
 
+# Python environment
 .envrc
+.env
+
 test_servers_config.json
