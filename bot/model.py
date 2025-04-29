@@ -28,7 +28,7 @@ def get_openai_client() -> AsyncOpenAI | AsyncAzureOpenAI:
         logging.info("Using Azure OpenAI API key")
         set_tracing_disabled(True)
         return AsyncAzureOpenAI(
-            api_version=os.getenv("AZURE_OPENAI_API_VERSION", "2023-05-15")
+            api_version=os.getenv("OPENAI_API_VERSION", "2023-05-15")
         )
     else:
         return AsyncOpenAI()
