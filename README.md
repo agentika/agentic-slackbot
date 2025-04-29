@@ -20,6 +20,14 @@ export OPENAI_MODEL="gpt-4o"
 export HTTP_PROXY=""
 ```
 
+If you are using Azure OpenAI, you can set the following environment variables instead:
+```
+AZURE_OPENAI_API_KEY
+AZURE_OPENAI_ENDPOINT
+AZURE_OPENAI_DEPLOYMENT_NAME
+AZURE_OPENAI_API_VERSION
+```
+
 ## Running the Bot
 
 ```bash
