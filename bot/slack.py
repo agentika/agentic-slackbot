@@ -15,9 +15,9 @@ class SlackMCPBot:
 
     def __init__(
         self,
-        slack_bot_token: str,
-        slack_app_token: str,
-        proxy: str,
+        slack_bot_token: str | None,
+        slack_app_token: str | None,
+        proxy: str | None,
         openai_agent: OpenAIAgent,
     ) -> None:
         self.app = AsyncApp(token=slack_bot_token)
@@ -26,7 +26,7 @@ class SlackMCPBot:
 
         self.client = AsyncWebClient(token=slack_bot_token, proxy=proxy)
         self.agent = openai_agent
-        self.conversations = {}  # Store conversation context per channel
+        self.conversations: dict[str, str] = {}  # Store conversation context per channel
 
         # Set up event handlers
         self.app.event("app_mention")(self.handle_mention)
