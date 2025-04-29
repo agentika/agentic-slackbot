@@ -1,14 +1,13 @@
 import asyncio
+import logging
+
 from slack_bolt.adapter.socket_mode.async_handler import AsyncSocketModeHandler
 from slack_bolt.async_app import AsyncApp
 from slack_sdk.web.async_client import AsyncWebClient
+
 from .agent import OpenAIAgent
 
-import logging
-
-logging.basicConfig(
-    level=logging.DEBUG, format="%(asctime)s - %(levelname)s - %(message)s"
-)
+logging.basicConfig(level=logging.DEBUG, format="%(asctime)s - %(levelname)s - %(message)s")
 
 
 class SlackMCPBot:
@@ -85,9 +84,7 @@ class SlackMCPBot:
             messages = []
 
             # Add user message to history
-            self.conversations[channel]["messages"].append(
-                {"role": "user", "content": text}
-            )
+            self.conversations[channel]["messages"].append({"role": "user", "content": text})
 
             # Add conversation history (last 5 messages)
             if "messages" in self.conversations[channel]:
@@ -98,9 +95,7 @@ class SlackMCPBot:
             agent_resp = await self.agent.run(messages)
 
             # Add assistant response to conversation history
-            self.conversations[channel]["messages"].append(
-                {"role": "assistant", "content": agent_resp}
-            )
+            self.conversations[channel]["messages"].append({"role": "assistant", "content": agent_resp})
 
             # Send the response to the user
             await say(text=agent_resp, channel=channel, thread_ts=thread_ts)
