@@ -2,6 +2,7 @@ import json
 import os
 from typing import Any
 
+from dotenv import find_dotenv
 from dotenv import load_dotenv
 
 
@@ -19,7 +20,7 @@ class Configuration:
     @staticmethod
     def load_env() -> None:
         """Load environment variables from .env file."""
-        load_dotenv()
+        load_dotenv(find_dotenv())
 
     @staticmethod
     def load_config(file_path: str) -> dict[str, Any]:
