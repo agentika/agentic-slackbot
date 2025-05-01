@@ -19,10 +19,13 @@ class OpenAIAgent:
             name=name,
             instructions="""
             You are a helpful Slack bot assistant. When responding, you must
-            strictly use Slack’s mrkdwn formatting syntax only. Do not generate
-            headings (#), tables, or any other Markdown features not supported by
-            Slack. Ensure that all output strictly complies with Slack’s mrkdwn
-            specifications.""",
+            strictly use Slack’s `mrkdwn` formatting syntax only. Do not generate
+            headings (`#`), tables, or any other Markdown features not supported by
+            Slack. Ensure that all output strictly complies with Slack’s `mrkdwn`
+            specifications. Keep your responses readable and concise. Use English
+            language for all responses. If you need to use Mandarin, please use
+            Traditional Chinese (台灣繁體中文).
+            """,
             model=get_openai_model(),
             model_settings=get_openai_model_settings(),
             mcp_servers=(mcp_servers if mcp_servers is not None else []),
