@@ -21,7 +21,7 @@ def get_openai_client() -> AsyncOpenAI | AsyncAzureOpenAI:
     chatai_api_key = os.getenv("CHATAI_API_KEY")
     openai_proxy_base_url = os.getenv("OPENAI_PROXY_BASE_URL")
     if chatai_api_key:
-        logging.info("Using Chatai API key")
+        logging.info("Using ChatAI API key")
         set_tracing_disabled(True)
         return AsyncOpenAI(base_url=openai_proxy_base_url, api_key=chatai_api_key)
     elif os.getenv("AZURE_OPENAI_API_KEY"):
