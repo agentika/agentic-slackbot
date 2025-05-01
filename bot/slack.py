@@ -7,7 +7,7 @@ from slack_sdk.web.async_client import AsyncWebClient
 
 from .agent import OpenAIAgent
 
-logging.basicConfig(level=logging.DEBUG, format="%(asctime)s - %(levelname)s - %(message)s")
+logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s")
 
 
 class SlackMCPBot:
@@ -20,7 +20,10 @@ class SlackMCPBot:
         proxy: str | None,
         openai_agent: OpenAIAgent,
     ) -> None:
-        self.app = AsyncApp(token=slack_bot_token)
+        self.app = AsyncApp(
+            token=slack_bot_token,
+            raise_error_for_unhandled_request=False,
+        )
         # Create a socket mode handler with the app token
         self.socket_mode_handler = AsyncSocketModeHandler(self.app, slack_app_token)
 
