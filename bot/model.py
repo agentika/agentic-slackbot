@@ -17,7 +17,7 @@ def get_openai_model() -> OpenAIChatCompletionsModel:
 
 
 @cache
-def get_openai_client() -> AsyncOpenAI | AsyncAzureOpenAI:
+def get_openai_client() -> AsyncOpenAI:
     chatai_api_key = os.getenv("CHATAI_API_KEY")
     openai_proxy_base_url = os.getenv("OPENAI_PROXY_BASE_URL")
     if chatai_api_key:
