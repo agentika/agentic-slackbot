@@ -34,5 +34,6 @@ def get_openai_client() -> AsyncOpenAI | AsyncAzureOpenAI:
 
 @cache
 def get_openai_model_settings():
-    temperature = float(os.getenv("OPENAI_TEMPERATURE", 0.0))
+    model = os.getenv("OPENAI_MODEL", "gpt-4o-mini")
+    temperature = None if model == "o3-mini" else float(os.getenv("OPENAI_TEMPERATURE", 0.0))
     return ModelSettings(temperature=temperature)
