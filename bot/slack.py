@@ -1,5 +1,6 @@
 import asyncio
 import logging
+from typing import Any
 
 from slack_bolt.adapter.socket_mode.async_handler import AsyncSocketModeHandler
 from slack_bolt.async_app import AsyncApp
@@ -29,7 +30,9 @@ class SlackMCPBot:
 
         self.client = AsyncWebClient(token=slack_bot_token, proxy=proxy)
         self.agent = openai_agent
-        self.conversations: dict[str, str] = {}  # Store conversation context per channel
+        self.conversations: dict[
+            str, dict[str, list[dict[str, str | Any | None]]]
+        ] = {}  # Store conversation context per channel
 
         # Set up event handlers
         self.app.event("app_mention")(self.handle_mention)
