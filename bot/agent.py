@@ -3,19 +3,18 @@ from __future__ import annotations
 import logging
 from typing import Any
 
+from agentize.model import get_openai_model
+from agentize.model import get_openai_model_settings
 from agents import Agent
 from agents import Runner
 from agents.mcp import MCPServerStdio
-
-from .model import get_openai_model
-from .model import get_openai_model_settings
 
 
 class OpenAIAgent:
     """A wrapper for OpenAI Agent"""
 
     def __init__(self, name: str, mcp_servers: list | None = None) -> None:
-        self.current_agent = Agent(
+        self.main_agent = Agent(
             name=name,
             instructions="""
             You are a helpful Slack bot assistant. When responding, you must
@@ -48,7 +47,7 @@ class OpenAIAgent:
         return cls(name, mcp_servers)
 
     async def connect(self) -> None:
-        for mcp_server in self.current_agent.mcp_servers:
+        for mcp_server in self.main_agent.mcp_servers:
             try:
                 await mcp_server.connect()
                 logging.info(f"Server {mcp_server.name} connecting")
@@ -57,13 +56,13 @@ class OpenAIAgent:
 
     async def run(self, messages: list) -> str:
         """Run a workflow starting at the given agent."""
-        result = await Runner.run(self.current_agent, input=messages)
+        result = await Runner.run(self.main_agent, input=messages)
         return result.final_output
 
     async def cleanup(self) -> None:
         """Clean up resources."""
         # Clean up servers
-        for mcp_server in self.current_agent.mcp_servers:
+        for mcp_server in self.main_agent.mcp_servers:
             try:
                 await mcp_server.cleanup()
                 logging.info(f"Server {mcp_server.name} cleaned up")

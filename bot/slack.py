@@ -8,7 +8,9 @@ from slack_sdk.web.async_client import AsyncWebClient
 
 from .agent import OpenAIAgent
 
-logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s")
+logging.basicConfig(
+    level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s"
+)
 
 
 class SlackMCPBot:
@@ -30,9 +32,9 @@ class SlackMCPBot:
 
         self.client = AsyncWebClient(token=slack_bot_token, proxy=proxy)
         self.agent = openai_agent
-        self.conversations: dict[
-            str, dict[str, list[dict[str, str | Any | None]]]
-        ] = {}  # Store conversation context per channel
+        self.conversations: dict[str, dict[str, list[dict[str, str | Any | None]]]] = (
+            {}
+        )  # Store conversation context per channel
 
         # Set up event handlers
         self.app.event("app_mention")(self.handle_mention)
@@ -90,7 +92,9 @@ class SlackMCPBot:
             messages = []
 
             # Add user message to history
-            self.conversations[channel]["messages"].append({"role": "user", "content": text})
+            self.conversations[channel]["messages"].append(
+                {"role": "user", "content": text}
+            )
 
             # Add conversation history (last 5 messages)
             if "messages" in self.conversations[channel]:
@@ -101,10 +105,12 @@ class SlackMCPBot:
             agent_resp = await self.agent.run(messages)
 
             # Add assistant response to conversation history
-            self.conversations[channel]["messages"].append({"role": "assistant", "content": agent_resp})
+            self.conversations[channel]["messages"].append(
+                {"role": "assistant", "content": str(agent_resp)}
+            )
 
             # Send the response to the user
-            await say(text=agent_resp, channel=channel, thread_ts=thread_ts)
+            await say(text=str(agent_resp), channel=channel, thread_ts=thread_ts)
 
         except Exception as e:
             error_message = f"I'm sorry, I encountered an error: {str(e)}"
