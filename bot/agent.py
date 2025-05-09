@@ -5,6 +5,8 @@ from typing import Any
 
 from agentize.model import get_openai_model
 from agentize.model import get_openai_model_settings
+
+# from agentize.utils import configure_langfuse
 from agents import Agent
 from agents import Runner
 from agents.mcp import MCPServerStdio
@@ -14,6 +16,7 @@ class OpenAIAgent:
     """A wrapper for OpenAI Agent"""
 
     def __init__(self, name: str, mcp_servers: list | None = None) -> None:
+        # configure_langfuse("my-slackbot")
         self.main_agent = Agent(
             name=name,
             instructions="""
